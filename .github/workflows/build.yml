@@ -1,0 +1,44 @@
+name: Build Android App
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Download and Unzip Project
+        run: |
+          wget https://github.com/${{ github.repository }}/releases/download/v1.0/shadows_app.zip
+          unzip shadows_app.zip -d app_project
+
+      - name: Install Cordova & Build
+        run: |
+          npm install -g cordova
+          cd app_project
+          npm install
+          cordova platform add android
+          cordova build android --release
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadows-android-release
+          path: |
+            app_project/platforms/android/app/build/outputs/bundle/release/*.aab
+            app_project/platforms/android/app/build/outputs/apk/release/*.apk
