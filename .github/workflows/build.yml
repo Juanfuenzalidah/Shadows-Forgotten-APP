@@ -22,25 +22,33 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Instalar Build Tools 33.0.2
+      - name: Instalar Android Platform 35
         run: |
-          yes | sdkmanager "build-tools;33.0.2" "platforms;android-33"
+          yes | sdkmanager "platforms;android-35"
 
-      - name: Setup Gradle 7.6.4
+      - name: Setup Gradle 8.7
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '7.6.4'
+          gradle-version: '8.7'
 
       - name: Download and Unzip Project
         run: |
           wget https://github.com/${{ github.repository }}/releases/download/v1.0/shadows_app.zip
           unzip shadows_app.zip -d app_project
 
+      - name: Forzar API 35 en config.xml
+        run: |
+          cd app_project
+          sed -i 's/<\/widget>//g' config.xml
+          echo '    <preference name="android-targetSdkVersion" value="35" />' >> config.xml
+          echo '    <preference name="android-compileSdkVersion" value="35" />' >> config.xml
+          echo '</widget>' >> config.xml
+
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app_project/shadows.keystore
 
-      - name: Create build.json (Configuración de firma)
+      - name: Create build.json
         run: |
           cat <<EOF > app_project/build.json
           {
@@ -62,7 +70,7 @@ jobs:
           cd app_project
           cordova plugin add cordova-plugin-androidx-adapter --save
           npm install
-          cordova platform add android
+          cordova platform add android@13.0.0
           cordova build android --release
 
       - name: Upload Build Artifacts
