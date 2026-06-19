@@ -8,36 +8,40 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - name: Download and Unzip Project
+        run: |
+          wget https://github.com/Juanfuenzalidah/Shadows-Forgotten-APP/releases/download/v1.0/shadows_app.zip
+          unzip -o shadows_app.zip -d app_project
 
-      - name: Setup Java
+      - name: Setup Java 17 (Para Android SDK)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '7.6.4'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Install Android Build Tools
+        run: sdkmanager "build-tools;33.0.2" "platforms;android-33"
 
-      - name: Download and Unzip Project
-        run: |
-          wget https://github.com/${{ github.repository }}/releases/download/v1.0/shadows_app.zip
-          unzip shadows_app.zip -d app_project
+      - name: Setup Java 11 (Para Cordova)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
       - name: Install Cordova & Build
         run: |
-          sdkmanager "build-tools;33.0.2" "platforms;android-33"
           npm install -g cordova
           cd app_project
           npm install
+          cordova plugin add cordova-plugin-androidx-adapter
           cordova platform add android
           cordova build android --release
 
