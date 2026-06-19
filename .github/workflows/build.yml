@@ -8,47 +8,63 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Download and Unzip Project
-        run: |
-          wget https://github.com/Juanfuenzalidah/Shadows-Forgotten-APP/releases/download/v1.0/shadows_app.zip
-          unzip -o shadows_app.zip -d app_project
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-      - name: Setup Java 17 (Para Android SDK)
+      - name: Setup Java 17 (para Android SDK Manager)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
-      
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '7.6.4'
-
-      - name: Install Android Build Tools
-        run: sdkmanager "build-tools;33.0.2" "platforms;android-33"
-
-      - name: Setup Java 11 (Para Cordova)
+      - name: Setup Java 11 (para compilación Cordova)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '11'
 
+      - name: Download and Unzip Project
+        run: |
+          wget https://github.com/${{ github.repository }}/releases/download/v1.0/shadows_app.zip
+          unzip shadows_app.zip -d app_project
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app_project/shadows.keystore
+
+      - name: Create build.json (Configuración de firma)
+        run: |
+          cat <<EOF > app_project/build.json
+          {
+            "android": {
+              "release": {
+                "keystore": "shadows.keystore",
+                "storePassword": "${{ secrets.KEYSTORE_PASSWORD }}",
+                "alias": "${{ secrets.KEY_ALIAS }}",
+                "password": "${{ secrets.KEY_PASSWORD }}",
+                "keystoreType": ""
+              }
+            }
+          }
+          EOF
+
       - name: Install Cordova & Build
         run: |
           npm install -g cordova
           cd app_project
+          cordova plugin add cordova-plugin-androidx-adapter --save
           npm install
-          cordova plugin add cordova-plugin-androidx-adapter
           cordova platform add android
           cordova build android --release
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: shadows-android-release
+          name: shadows-android-release-signed
           path: |
             app_project/platforms/android/app/build/outputs/bundle/release/*.aab
-            app_project/platforms/android/app/build/outputs/apk/release/*.apk
