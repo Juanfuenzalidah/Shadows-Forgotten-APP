@@ -22,6 +22,11 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Setup Gradle 7.6.4
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '7.6.4'
+
       - name: Download and Unzip Project
         run: |
           wget https://github.com/${{ github.repository }}/releases/download/v1.0/shadows_app.zip
