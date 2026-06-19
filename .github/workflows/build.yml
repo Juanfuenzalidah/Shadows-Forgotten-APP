@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Setup Java 17 (para Android SDK Manager)
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -21,12 +21,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Setup Java 11 (para compilación Cordova)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '11'
 
       - name: Download and Unzip Project
         run: |
