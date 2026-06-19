@@ -34,6 +34,7 @@ jobs:
 
       - name: Install Cordova & Build
         run: |
+          sdkmanager "build-tools;33.0.2" "platforms;android-33"
           npm install -g cordova
           cd app_project
           npm install
