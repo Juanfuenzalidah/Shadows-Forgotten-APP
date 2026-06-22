@@ -33,7 +33,8 @@ jobs:
 
       - name: Download and Unzip Project from Google Drive
         run: |
-          wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1iPKScvzuZQTlImmp7XqIL-3yc2oe40jf' -O shadows_app.zip
+          pip install gdown
+          gdown --id 1iPKScvzuZQTlImmp7XqIL-3yc2oe40jf -O shadows_app.zip
           unzip shadows_app.zip -d app_project
 
       - name: Forzar API 35 y Version 1.0.5
