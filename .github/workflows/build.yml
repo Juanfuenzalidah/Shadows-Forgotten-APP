@@ -37,7 +37,7 @@ jobs:
           gdown 1iPKScvzuZQTlImmp7XqIL-3yc2oe40jf -O shadows_app.zip
           unzip shadows_app.zip -d app_project
 
-      - name: Forzar API 35 y Limpiar Configuración
+      - name: Forzar API 35 y Corregir Plugin AdMob
         run: |
           cd app_project
           sed -i 's/version="1.0.0"/version="1.0.5"/g' config.xml
@@ -46,8 +46,8 @@ jobs:
           echo '    <preference name="android-targetSdkVersion" value="35" />' >> config.xml
           echo '    <preference name="android-compileSdkVersion" value="35" />' >> config.xml
           echo '</widget>' >> config.xml
-          sed -i '/admob-plus-cordova/d' package.json
-          sed -i '/admob-plus-cordova/d' config.xml
+          sed -i 's/"latest"/"*"/g' package.json
+          sed -i 's/spec="latest"/spec="*"/g' config.xml
 
       - name: Decode Keystore
         run: |
@@ -73,7 +73,6 @@ jobs:
         run: |
           npm install -g cordova
           cd app_project
-          cordova plugin add admob-plus-cordova --variable APP_ID_ANDROID=ca-app-pub-3940256099942544~3347511713 --save
           cordova plugin add cordova-plugin-androidx-adapter --save
           npm install
           cordova platform add android@13.0.0
