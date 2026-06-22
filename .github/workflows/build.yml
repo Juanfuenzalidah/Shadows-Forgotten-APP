@@ -31,9 +31,9 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Download and Unzip Project
+      - name: Download and Unzip Project from Google Drive
         run: |
-          wget https://github.com/${{ github.repository }}/releases/download/v1.0/shadows_app.zip
+          wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1iPKScvzuZQTlImmp7XqIL-3yc2oe40jf' -O shadows_app.zip
           unzip shadows_app.zip -d app_project
 
       - name: Forzar API 35 y Version 1.0.5
