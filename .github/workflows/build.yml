@@ -76,7 +76,9 @@ jobs:
           cordova plugin add cordova-plugin-androidx-adapter --save
           npm install
           cordova platform add android@13.0.0
-          cordova build android --release
+          cordova prepare android
+          sed -i '/<\/manifest>/i \    <uses-permission android:name="com.google.android.gms.permission.AD_ID" \/>' platforms/android/app/src/main/AndroidManifest.xml
+          cordova compile android --release
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
