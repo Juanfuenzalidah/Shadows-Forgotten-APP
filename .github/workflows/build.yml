@@ -34,14 +34,14 @@ jobs:
       - name: Download and Unzip Project from Google Drive
         run: |
           pip install gdown
-          gdown 1LvQ1Nf7CyL1cXONuyepLpHw33m86MJ-w -O shadows_app.zip
+          gdown 1ZNSe4xMc1GkWD-aylNPXVMDrP-Yvq8VL -O shadows_app.zip
           unzip shadows_app.zip -d app_project
 
       - name: Forzar API 35 y Corregir Plugin AdMob
         run: |
           cd app_project
-          sed -i 's/version="1.0.1"/version="1.0.7"/g' config.xml
-          sed -i 's/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android"/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android" android-versionCode="10007"/g' config.xml
+          sed -i 's/version="1.0.1"/version="1.0.8"/g' config.xml
+          sed -i 's/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android"/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android" android-versionCode="10008"/g' config.xml
           sed -i 's/<\/widget>//g' config.xml
           echo '    <preference name="android-targetSdkVersion" value="35" />' >> config.xml
           echo '    <preference name="android-compileSdkVersion" value="35" />' >> config.xml
