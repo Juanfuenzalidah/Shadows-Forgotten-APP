@@ -41,7 +41,7 @@ jobs:
         run: |
           cd app_project
           sed -i 's/version="1.0.1"/version="1.0.6"/g' config.xml
-          sed -i 's/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android"/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android" android-versionCode="10005"/g' config.xml
+          sed -i 's/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android"/xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android" android-versionCode="10006"/g' config.xml
           sed -i 's/<\/widget>//g' config.xml
           echo '    <preference name="android-targetSdkVersion" value="35" />' >> config.xml
           echo '    <preference name="android-compileSdkVersion" value="35" />' >> config.xml
